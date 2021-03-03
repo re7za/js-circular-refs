@@ -4,7 +4,7 @@ import { TAnyObj } from "../types";
 import randomStr from "./randomStr";
 import isPureObj from "./isPureObj";
 
-export default function stringify(circularObj: TAnyObj): TAnyObj {
+export default function decycle(circularObj: TAnyObj): TAnyObj {
   const refs = new Map<TAnyObj, string>();
 
   const result: TAnyObj = (function objTreeIterator(obj: TAnyObj) {
