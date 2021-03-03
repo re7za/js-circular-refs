@@ -2,9 +2,11 @@
   "name": "js-circular-refs",
   "version": "1.0.0",
   "description": "A Solution for Storing the Circular References on Strings in JavaScript. :floppy_disk:",
-  "main": "src/index.js",
+  "main": "src/index.ts",
   "scripts": {
-    "start": "babel-node src/index.js"
+    "start": "ts-node ./src/index.ts",
+    "clean": "shx rm -rf build",
+    "build": "npm run clean && tsc"
   },
   "repository": {
     "type": "git",
@@ -18,8 +20,9 @@
   },
   "homepage": "https://github.com/smrsan/js-circular-refs#readme",
   "devDependencies": {
-    "@babel/core": "^7.13.8",
-    "@babel/node": "^7.13.0",
-    "@babel/preset-env": "^7.13.9"
+    "@types/node": "^14.14.31",
+    "shx": "^0.3.3",
+    "ts-node": "^9.1.1",
+    "typescript": "^4.2.2"
   }
 }
