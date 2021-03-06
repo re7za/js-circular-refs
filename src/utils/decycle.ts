@@ -4,21 +4,34 @@ import { TAnyObj } from "../types";
 import randomStr from "./randomStr";
 import isPureObj from "./isPureObj";
 
-export default function decycle(circularObj: TAnyObj, modifyObj: boolean = false): TAnyObj {
+interface IDecycleOptions {
+  modifyObj?: boolean;
+  refIdLength?: number;
+  refPropName?: string;
+  idPropName?: string;
+}
+
+export default function decycle(circularObj: TAnyObj, options?: IDecycleOptions): TAnyObj {
   const refs = new Map<TAnyObj, string>();
+  const { modifyObj, refIdLength, refPropName, idPropName }: IDecycleOptions = {
+    modifyObj: options?.modifyObj ?? false,
+    refIdLength: options?.refIdLength ?? REF_ID_LENGTH,
+    refPropName: options?.refPropName ?? REF_PROP_NAME,
+    idPropName: options?.idPropName ?? ID_PROP_NAME
+  };
 
   const result: TAnyObj = (function objTreeIterator(obj: TAnyObj): TAnyObj {
     const result: TAnyObj = modifyObj ? obj : { ...obj };
-    const objId = randomStr(REF_ID_LENGTH);
+    const objId = randomStr(refIdLength);
 
     refs.set(obj, objId);
-    result[ID_PROP_NAME] = objId;
+    result[idPropName] = objId;
 
     for (const [key, subObj] of Object.entries(result)) {
       if (!isPureObj(subObj)) continue;
       if (refs.has(subObj)) {
         const subObjId = refs.get(subObj);
-        result[key] = { [REF_PROP_NAME]: subObjId };
+        result[key] = { [refPropName]: subObjId };
       } else {
         result[key] = objTreeIterator(subObj);
       }

@@ -13,11 +13,13 @@ a.a = a;
 const original = a;
 console.log("A (original):", a);
 
-const decycled = decycle(a, true);
+const decycled = decycle(a, { modifyObj: true, refIdLength: 5 });
 console.log("A (decycled):", a);
 
-const retrieved = retrieve(a, true);
+const retrieved = retrieve(a, { modifyObj: true });
 console.log("A (retrived):", a);
 
 console.log("original === decycled ===", original === decycled);
 console.log("decycled === retrieved ===", decycled === retrieved);
+
+console.log("retrieved.a.b.a.b:", retrieved.a.b.a.b);
