@@ -28,6 +28,14 @@ export default function decycle(circularObj: TAnyObj, options?: IDecycleOptions)
     result[idPropName] = objId;
 
     for (const [key, subObj] of Object.entries(result)) {
+      if (Array.isArray(subObj)) {
+        if (refs.has(subObj)) {
+          result[key] = [...subObj];
+        } else {
+          const iteratedObjTree = objTreeIterator(subObj);
+          result[key] = Object.keys(iteratedObjTree).map((k) => iteratedObjTree[k]);
+        }
+      }
       if (!isPureObj(subObj)) continue;
       if (refs.has(subObj)) {
         const subObjId = refs.get(subObj);
@@ -36,7 +44,6 @@ export default function decycle(circularObj: TAnyObj, options?: IDecycleOptions)
         result[key] = objTreeIterator(subObj);
       }
     }
-
     return result;
   })(circularObj);
 
