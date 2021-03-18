@@ -2,24 +2,17 @@ import { TAnyObj } from "./types";
 import decycle from "./utils/decycle";
 import retrieve from "./utils/retrieve";
 
-const a: TAnyObj = { name: "hello" };
-const b: TAnyObj = { fami: "world" };
+const a: TAnyObj = { wubba: ["lubba", "dab", "dab"] };
+const b: TAnyObj = { hello: "world" };
 
-a.b = b;
 b.a = a;
-b.b = b;
-a.a = a;
+a.b = b;
 
-const original = a;
-console.log("A (original):", a);
+const original = b;
+console.log("original:", original);
 
-const decycled = decycle(a, { modifyObj: true, refIdLength: 5 });
-console.log("A (decycled):", a);
+const decycled = decycle(original, { refIdLength: 5 });
+console.log("decycled:", decycled);
 
-const retrieved = retrieve(a, { modifyObj: true });
-console.log("A (retrived):", a);
-
-console.log("original === decycled ===", original === decycled);
-console.log("decycled === retrieved ===", decycled === retrieved);
-
-console.log("retrieved.a.b.a.b:", retrieved.a.b.a.b);
+const retrieved = retrieve(decycled, { modifyObj: false });
+console.log("retrived:", retrieved.a.b.a.b.a.b.a.b.a.b);

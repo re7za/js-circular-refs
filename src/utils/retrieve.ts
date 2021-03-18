@@ -8,6 +8,23 @@ interface IRetrieveOptions {
   idPropName?: string;
 }
 
+const isArray = (obj: TAnyObj) => {
+  const keys = Object.keys(obj);
+  let isArray = true;
+  for (let i = 0; i < keys.length; i++) {
+    if (i !== Number(keys[i])) {
+      isArray = false;
+      break;
+    }
+  }
+
+  return isArray;
+};
+
+const objToArrConverter = (obj: TAnyObj) => {
+  return Object.keys(obj).map((key) => obj[key]);
+};
+
 export default function retrieve(decycledObj: TAnyObj, options?: IRetrieveOptions): TAnyObj {
   const ids = new Map<string, TAnyObj>();
   const { modifyObj, refPropName, idPropName }: IRetrieveOptions = {
@@ -24,6 +41,22 @@ export default function retrieve(decycledObj: TAnyObj, options?: IRetrieveOption
     delete result[idPropName];
 
     for (const [key, subObj] of Object.entries(result)) {
+      if (Array.isArray(subObj)) {
+        if (refPropName in subObj) {
+          console.log(subObj);
+          // const bit = ids.get(subObj[refPropName]);
+          // console.log(bit);
+          result[key] = [];
+        } else {
+          const iteratedObjTree = objTreeIterator(subObj);
+          const retrievedArr: any[] = [];
+          const objKeys = Object.keys(iteratedObjTree);
+          objKeys.forEach((i) => {
+            if (Number(i) < objKeys.length - 1) retrievedArr.push(iteratedObjTree[i]);
+          });
+          result[key] = retrievedArr;
+        }
+      }
       if (!isPureObj(subObj)) continue;
       if (refPropName in subObj) {
         result[key] = ids.get(subObj[refPropName]);
