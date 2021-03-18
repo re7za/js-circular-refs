@@ -7,6 +7,7 @@ export default function isPureObj(value: any) {
     !(value instanceof Date) &&
     !(value instanceof Number) &&
     !(value instanceof RegExp) &&
-    !(value instanceof String)
+    !(value instanceof String) &&
+    !(value instanceof Array)
   );
 }
